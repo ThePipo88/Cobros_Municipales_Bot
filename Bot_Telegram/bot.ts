@@ -28,19 +28,6 @@ function iniciar(){
     });
 }
 
-function formula(opc: number){
-  axios.get('http://localhost:8089/parametros/'+opc, {headers: {
-    Authorization: 'bearer ' + token.jwt,
- }})
-  .then(response => {
-    param = response.data as parametro;
-    console.log(param.formula);
-  })
-  .catch(err => {
-    console.log(err, err.response);
-  });
-}
-
 bot.command('start', async (cxt)=>{
 iniciar();
 cxt.reply('🤖Bienvenid@, a continuacion se le brindaran las diferentes opciones que puede consultar:\n\n'+
@@ -80,6 +67,24 @@ bot.command('/pagos', async (cxt)=>{
 
 bot.command('/info', async (cxt)=>{
 
+  var msg = cxt.message.text;
+  var msgArray = '';
+  var i = 5;
+
+  while(i < 7){
+
+    axios.get('http://localhost:8089/parametros/'+i.toString(), {headers: {
+    Authorization: 'bearer ' + token.jwt,
+ }})
+  .then(response => {
+    param = response.data as parametro;
+    cxt.reply(param.formula);
+  })
+  .catch(err => {
+    console.log(err, err.response);
+  });
+    i++;
+  }
 })
 
 bot.launch()
