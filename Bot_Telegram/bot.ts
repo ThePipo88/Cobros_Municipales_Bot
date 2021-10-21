@@ -2,11 +2,16 @@ import {Telegraf} from 'telegraf'
 import axios from 'axios';
 import {user} from './dto/user';
 import {parametro} from './dto/parametro';
+import { cobroGenerado } from './dto/cobros';
+import { cobroCancelado } from './dto/cobros';
 import { isNumericLiteral } from 'typescript';
+import { report } from 'process';
 
 const bot = new Telegraf('2018669114:AAHCpvayz6uWRNTi_1hQEpFfb48-qu7lnVo')
 var token: user;
 var param: parametro;
+var cobrosGenerados: Array<cobroGenerado>;
+var cobrosCancelados: Array<cobroCancelado>;
 
 function iniciar(){
     axios.post('http://localhost:8089/autenticacion',
@@ -44,25 +49,77 @@ bot.command('/formula', async (cxt)=>{
   var msg = cxt.message.text;
   var msgArray = msg.split(' ');
 
-  axios.get('http://localhost:8089/parametros/'+msgArray[1], {headers: {
+  axios.get('http://localhost:8089/parametros/'+msgArray[1], {headers: {    
     Authorization: 'bearer ' + token.jwt,
  }})
   .then(response => {
     param = response.data as parametro;
-    cxt.reply(param.formula)
+    cxt.reply(param.formula);
   })
   .catch(err => {
     console.log(err, err.response);
   });
-
 })
 
 bot.command('/pendientes', async (cxt)=>{
-  cxt.reply('Pendientes');
+  
+  var msg = cxt.message.text;
+  var msgArray = msg.split(' ');
+
+  axios.get('http://localhost:8089/cobrosGenerados/ByCobroCedula/'+msgArray[1], {headers: {
+    Authorization: 'bearer ' + token.jwt,
+ }})
+  .then(response =>{
+    //if (res.status >= 400 && res.status < 600) {
+    var total = 0;
+    cobrosGenerados = response.data as Array<cobroGenerado>;
+
+    for(let entry of cobrosGenerados){
+       cxt.reply('Contribuyente: '+entry.contribuyenteServicio.contribuyente.nombre+'\n'+
+       'Cedula: '+entry.contribuyenteServicio.contribuyente.cedula+'\n'+
+       'Servicio: '+entry.contribuyenteServicio.servicio.tipoServicio+'\n'+
+       'Id del servicio: '+entry.contribuyenteServicio.servicio.id+'\n'+
+       'Monto: '+entry.monto+' ₡'+'\n'+
+       'Fecha de emision: '+entry.fechaCobro);
+
+       total = total+ entry.monto;
+       if(entry.id == cobrosGenerados[cobrosGenerados.length-1].id){
+        setTimeout(() => {
+          cxt.reply('Total por cancelar: '+total+' ₡');
+        },1500);
+       }
+    }
+  })
+  .catch(err => {
+    console.log(err, err.response);
+  });
 })
 
 bot.command('/pagos', async (cxt)=>{
-  cxt.reply('Pagos');
+  
+  var msg = cxt.message.text;
+  var msgArray = msg.split(' ');
+
+  axios.get('http://localhost:8089/cobrosCancelados/ByCobroCedula/'+msgArray[1]+'/'+msgArray[2]+'/'+msgArray[3], {headers: {
+    Authorization: 'bearer ' + token.jwt,
+ }})
+  .then(response =>{
+    //if (res.status >= 400 && res.status < 600) {
+    var total = 0;
+    cobrosCancelados = response.data as Array<cobroCancelado>;
+
+    for(let entry of cobrosCancelados){
+      cxt.reply('Contribuyente: '+entry.cobroGenerado.contribuyenteServicio.contribuyente.nombre+'\n'+
+      'Cedula: '+entry.cobroGenerado.contribuyenteServicio.contribuyente.cedula+'\n'+
+      'Servicio: '+entry.cobroGenerado.contribuyenteServicio.servicio.tipoServicio+'\n'+
+      'Id del servicio: '+entry.cobroGenerado.contribuyenteServicio.servicio.id+'\n'+
+      'Monto cancelado: '+entry.cobroGenerado.monto+' ₡'+'\n'+
+      'Fecha de cancelacion '+entry.fechaCreacion);
+    }
+  })
+  .catch(err => {
+    console.log(err, err.response);
+  });
 })
 
 bot.command('/info', async (cxt)=>{
@@ -75,7 +132,7 @@ bot.command('/info', async (cxt)=>{
 
     axios.get('http://localhost:8089/parametros/'+i.toString(), {headers: {
     Authorization: 'bearer ' + token.jwt,
- }})
+    }})
   .then(response => {
     param = response.data as parametro;
     cxt.reply(param.formula);
