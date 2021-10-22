@@ -1,5 +1,4 @@
 
-/*
 export interface cobroCancelado{
     cobroGenerado: cobroGenerado;
     descripcion: string;
@@ -7,39 +6,40 @@ export interface cobroCancelado{
     id: number;
     recibo: recibo;
 }
-*/
+
 export interface cobroGenerado{
-    contribuyenteServicio: contribuyenteServicio;
-    estado: boolean;
-    fechaCobro: Date;
     id: number;
+    contribuyenteServicio: contribuyenteServicio;
+    fechaCobro: Date;
     monto: number;
+    estado: boolean;
 }
 
+
 export interface contribuyenteServicio{
-    contribuyente: contribuyente;
     id: number;
     porcentaje: string;
+    contribuyente: contribuyente;
     servicio: servicio;
 }
 
 export interface contribuyente{
-    cedula: string;
-    correoElectronico: string;
-    direccion: string;
-    fechaNacimiento: Date;
     id: number;
+    cedula: string;
     nombre: string;
+    fechaNacimiento: Date;
+    direccion: string;
+    correoElectronico: string;
     telefono: string;
 }
 
 export interface servicio{
+    id: number;
+    tipoServicio: string;
     descripcion: string;
     estado: boolean;
-    fechaRegistro: Date;
-    id: number;
     propiedad: propiedad;
-    tipoServicio: string;
+    fechaRegistro: Date;
     ultimaActualizacion: Date;
 }
 
@@ -62,3 +62,4 @@ export interface recibo{
     id: number;
     montoCancelado: string;
 }
+
