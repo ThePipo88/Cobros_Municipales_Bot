@@ -15,7 +15,7 @@ export class MunicipalidadService{
 formula(token: string, parameters: string[], bot: Telegraf, chat: number){
 
     
-      axios.get('http://localhost:8089/parametros/'+parameters[1], {headers: {    
+      axios.get('http://localhost:8089/botTelegram/'+parameters[1], {headers: {    
         Authorization: 'bearer ' + token,
       }}).then(response => {
         var param = response.data as parametro;
@@ -24,12 +24,11 @@ formula(token: string, parameters: string[], bot: Telegraf, chat: number){
       .catch(err => {
         console.log(err, err.response);
       });
-
   }
 
   pendientes(token: string, parameters: string[], bot: Telegraf, chat: number){
 
-    axios.get('http://localhost:8089/cobrosGenerados/ByCobroCedula/'+parameters[1], {headers: {
+    axios.get('http://localhost:8089/botTelegram/ByCobroCedula/'+parameters[1], {headers: {
     Authorization: 'bearer ' + token,
   }}).then(response =>{
     var total = 0;
@@ -59,7 +58,7 @@ formula(token: string, parameters: string[], bot: Telegraf, chat: number){
 
 pagos(token: string, parameters: string[], bot: Telegraf, chat: number){
 
-    axios.get('http://localhost:8089/cobrosCancelados/ByCobroCedula/'+parameters[1]+'/'+parameters[2]+'/'+parameters[3], {headers: {
+    axios.get('http://localhost:8089/botTelegram/ByCobroBetweenCedulaAndFecha/'+parameters[1]+'/'+parameters[2]+'/'+parameters[3], {headers: {
     Authorization: 'bearer ' + token,
    }}).then(response =>{
     //if (res.status >= 400 && res.status < 600) {
@@ -87,7 +86,7 @@ pagos(token: string, parameters: string[], bot: Telegraf, chat: number){
     var i = 5;
     while(i < 7){
   
-      axios.get('http://localhost:8089/parametros/'+i.toString(), {headers: {
+      axios.get('http://localhost:8089/botTelegram/'+i.toString(), {headers: {
       Authorization: 'bearer ' + token,
       }})
     .then(response => {

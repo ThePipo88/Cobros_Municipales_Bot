@@ -84,7 +84,7 @@ function opcion(opc: number, token: string, parameters: string[], bot: Telegraf,
 function iniciar(){
     axios.post('http://localhost:8089/autenticacion',
       {
-        cedula: "0123456789",
+        cedula: "telegram",
         password: "Una2021"
       },
       {
@@ -132,7 +132,6 @@ bot.command('/pagos', async (cxt)=>{
 })
 
 bot.command('/info', async (cxt)=>{
-
   var msg = cxt.message.text;
   var msgArray = msg.split(' ');
   verificar(4,msgArray,bot, cxt.from.id);
