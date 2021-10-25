@@ -29,7 +29,7 @@ function verificar(opc: number,parameters: string[], bot: Telegraf, chatId: numb
       
       const originalRequest = config;
   
-      if (status === 401 || data.message === "Unauthorized") {
+      if (status == 401 || data.message == "Unauthorized") {
         axios.post('http://localhost:8089/autenticacion',
       {
         cedula: "telegram",
@@ -110,14 +110,14 @@ function iniciar(){
 
 bot.command('start', async (cxt)=>{
 iniciar();
-cxt.reply('🤖Bienvenid@ '+cxt.from.first_name+', a continuacion se le brindaran las diferentes opciones que puede consultar:\n\n'+
-'a)Formula para el calculo de un impuesto: ingresar el comando /formula y el tipo de impuesto a consultar:\n1.Ruta de buses\n2.Parques y Ornatos\n'+
-'3.Limpieza de vias\n4.Derechos de cementerio\nPor ejemplo: /formula 2 \n\n'+
-'b)Pendientes totales: ingresar el comando /pendientes mas el numero de cedula: \nPor ejemplo /pendientes 123456789\n\n'+
-'c)Ultimos pagos realizados: ingresar el comando /pagos mas el numero de cedula y dos rangos de fechas en los que se desea consultar estos pagos:\nPor ejemplo '+
+cxt.reply('🤖Bienvenid@ '+cxt.from.first_name+', a continuación se le brindaran las diferentes opciones que puede consultar:\n\n'+
+'a)Fórmula para el cálculo de un impuesto: ingresar el comando /formula y el tipo de impuesto a consultar:\n1.Ruta de buses\n2.Parques y Ornatos\n'+
+'3.Limpieza de vías\n4.Derechos de cementerio\nPor ejemplo: /formula 2 \n\n'+
+'b) Pendientes totales: ingresar el comando /pendientes más el número de cedula: \nPor ejemplo /pendientes 123456789\n\n'+
+'c)Últimos pagos realizados: ingresar el comando /pagos más el número de cedula y dos rangos de fechas en los que se desea consultar estos pagos:\nPor ejemplo '+
 '/pagos 123456789 2021-03-12 2021-07-21\n\n'+
-'d)Horarios de atencion: ingresar el comando /horarios para obtener los horarios de atencion de la municipalidad\n\n'+
-'e)Central telefonica: ingresar el comando /contactos para obtener el directorio de contactos telefonicos de la municipalidad');
+'d)Horarios de atención: ingresar el comando /horarios para obtener los horarios de atención de la municipalidad\n\n'+
+'e)Central telefónica: ingresar el comando /contactos para obtener el directorio de contactos telefónicos de la municipalidad');
 })
 
 

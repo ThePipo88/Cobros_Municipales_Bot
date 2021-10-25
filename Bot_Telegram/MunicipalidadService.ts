@@ -42,12 +42,12 @@ pendientes(token: string, parameters: string[], tipo: number, bot: Telegraf, cha
     var cobrosGenerados = response.data as Array<cobroGenerado>;
     var text = '';
     for(let entry of cobrosGenerados){
+      text += this.valoresContenidos(tipo)+'\n\n';
        text += 'Contribuyente: '+entry.contribuyenteServicio.contribuyente.nombre+'\n'+
-       'Cedula: '+entry.contribuyenteServicio.contribuyente.cedula+'\n'+
-       'Servicio: '+entry.contribuyenteServicio.servicio.tipoServicio+'\n'+
+       'Cédula: '+entry.contribuyenteServicio.contribuyente.cedula+'\n'+
        'Id del servicio: '+entry.contribuyenteServicio.servicio.id+'\n'+
        'Monto: '+' ₡'+entry.monto+'\n'+
-       'Fecha de emision: '+entry.fechaCobro+'\n\n';
+       'Fecha de emisión: '+entry.fechaCobro+'\n\n';
 
        total = total+ entry.monto;
        if(entry.id == cobrosGenerados[cobrosGenerados.length-1].id){
@@ -57,7 +57,7 @@ pendientes(token: string, parameters: string[], tipo: number, bot: Telegraf, cha
 
     if(text != ''){
       if(tipo+1 < 5){
-        bot.telegram.sendMessage(chat,this.valoresContenidos(tipo)+'\n\n'+text);
+        bot.telegram.sendMessage(chat,text);
         this.pendientes(token, parameters,tipo = tipo+1, bot, chat,true);
       }
       else{
@@ -97,17 +97,16 @@ pagos(token: string, parameters: string[], bot: Telegraf, chat: number){
     axios.get('http://localhost:8089/botTelegram/ByCobroBetweenCedulaAndFecha/'+parameters[1]+'/'+parameters[2]+'/'+parameters[3], {headers: {
     Authorization: 'bearer ' + token,
    }}).then(response =>{
-    //if (res.status >= 400 && res.status < 600) {
     var total = 0;
     var cobrosCancelados = response.data as Array<cobroCancelado>;
     var text = '';
     for(let entry of cobrosCancelados){
       text += 'Contribuyente: '+entry.cobroGenerado.contribuyenteServicio.contribuyente.nombre+'\n'+
-      'Cedula: '+entry.cobroGenerado.contribuyenteServicio.contribuyente.cedula+'\n'+
-      'Servicio: '+entry.cobroGenerado.contribuyenteServicio.servicio.tipoServicio+'\n'+
+      'Cédula: '+entry.cobroGenerado.contribuyenteServicio.contribuyente.cedula+'\n'+
+      'Servicio: '+this.valoresContenidos(Number(entry.cobroGenerado.contribuyenteServicio.servicio.tipoServicio))+'\n'+
       'Id del servicio: '+entry.cobroGenerado.contribuyenteServicio.servicio.id+'\n'+
       'Monto cancelado: '+' ₡'+entry.cobroGenerado.monto+'\n'+
-      'Fecha de cancelacion '+entry.fechaCreacion+'\n\n';
+      'Fecha de cancelación: '+entry.fechaCreacion+'\n\n';
     }
 
     if(text != ''){
@@ -166,7 +165,7 @@ telefonos(token: string, parameters: string[], bot: Telegraf, chat: number){
     }else if(opc == 2){
       servicio = 'Parques y Ornatos';
     }else if(opc == 3){
-      servicio = 'Limpieza de vias';
+      servicio = 'Limpieza de vías';
     }else if(opc == 4){
       servicio = 'Derechos de cementerio';
     }
@@ -175,3 +174,4 @@ telefonos(token: string, parameters: string[], bot: Telegraf, chat: number){
    }
 
 }
+
