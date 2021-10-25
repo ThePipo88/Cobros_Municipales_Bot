@@ -7,6 +7,7 @@ import { cobroCancelado } from './dto/cobros';
 import {MunicipalidadService} from './MunicipalidadService';
 
 const bot = new Telegraf('2018669114:AAHCpvayz6uWRNTi_1hQEpFfb48-qu7lnVo')
+
 var token: user;
 var param: parametro;
 var cobrosGenerados: Array<cobroGenerado>;
@@ -31,7 +32,7 @@ function verificar(opc: number,parameters: string[], bot: Telegraf, chatId: numb
       if (status === 401 || data.message === "Unauthorized") {
         axios.post('http://localhost:8089/autenticacion',
       {
-        cedula: "0123456789",
+        cedula: "telegram",
         password: "Una2021"
       },
       {
@@ -52,7 +53,6 @@ function verificar(opc: number,parameters: string[], bot: Telegraf, chatId: numb
     error = true;
       }
       else{
-        console.log('Todo bien');
         opcion(opc,token.jwt,parameters,bot,chatId);
       }
     }
@@ -70,18 +70,23 @@ function opcion(opc: number, token: string, parameters: string[], bot: Telegraf,
     municipalidadService.formula(token, parameters, bot, chatId);
   }
   else if(opc == 2){
-    municipalidadService.pendientes(token, parameters, bot, chatId);
+    municipalidadService.pendientes(token, parameters,1, bot, chatId,false);
   }
   else if(opc == 3){
     municipalidadService.pagos(token, parameters, bot, chatId);
   }
   else if(opc == 4){
-    municipalidadService.informacion(token, parameters, bot, chatId);
+    municipalidadService.horarios(token, parameters, bot, chatId);
+  }
+  else if(opc == 5){
+    municipalidadService.telefonos(token, parameters, bot, chatId);
   }
   
 }
 
 function iniciar(){
+
+  if(token == null){
     axios.post('http://localhost:8089/autenticacion',
       {
         cedula: "telegram",
@@ -95,10 +100,12 @@ function iniciar(){
     )
     .then(response => {
       token = response.data as user;
+      console.log('Token creado: '+token.jwt);
     })
     .catch(err => {
       console.log(err, err.response);
     });
+  }
 }
 
 bot.command('start', async (cxt)=>{
@@ -109,20 +116,21 @@ cxt.reply('🤖Bienvenid@ '+cxt.from.first_name+', a continuacion se le brindara
 'b)Pendientes totales: ingresar el comando /pendientes mas el numero de cedula: \nPor ejemplo /pendientes 123456789\n\n'+
 'c)Ultimos pagos realizados: ingresar el comando /pagos mas el numero de cedula y dos rangos de fechas en los que se desea consultar estos pagos:\nPor ejemplo '+
 '/pagos 123456789 2021-03-12 2021-07-21\n\n'+
-'d)Horarios y central telefonica: ingresar el comando /info para obtener los horarios de atencion y la central telefonica');
+'d)Horarios de atencion: ingresar el comando /horarios para obtener los horarios de atencion de la municipalidad\n\n'+
+'e)Central telefonica: ingresar el comando /contactos para obtener el directorio de contactos telefonicos de la municipalidad');
 })
 
 
 bot.command('/formula', async (cxt)=>{
   var msg = cxt.message.text;
   var msgArray = msg.split(' ');
-  verificar(1,msgArray,bot, cxt.from.id)
+  verificar(1,msgArray,bot, cxt.from.id) 
 })
 
 bot.command('/pendientes', async (cxt)=>{
   var msg = cxt.message.text;
   var msgArray = msg.split(' ');
-  verificar(2,msgArray,bot, cxt.from.id) 
+  verificar(2,msgArray,bot, cxt.from.id) ;
 })
 
 bot.command('/pagos', async (cxt)=>{  
@@ -131,11 +139,16 @@ bot.command('/pagos', async (cxt)=>{
   verificar(3,msgArray,bot, cxt.from.id);
 })
 
-bot.command('/info', async (cxt)=>{
+bot.command('/horarios', async (cxt)=>{
   var msg = cxt.message.text;
   var msgArray = msg.split(' ');
   verificar(4,msgArray,bot, cxt.from.id);
 })
 
+bot.command('/contactos', async (cxt)=>{
+  var msg = cxt.message.text;
+  var msgArray = msg.split(' ');
+  verificar(5,msgArray,bot, cxt.from.id);
+})
 
 bot.launch()
