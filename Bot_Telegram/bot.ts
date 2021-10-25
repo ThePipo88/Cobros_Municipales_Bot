@@ -113,8 +113,8 @@ iniciar();
 cxt.reply('🤖Bienvenid@ '+cxt.from.first_name+', a continuación se le brindaran las diferentes opciones que puede consultar:\n\n'+
 'a)Fórmula para el cálculo de un impuesto: ingresar el comando /formula y el tipo de impuesto a consultar:\n1.Ruta de buses\n2.Parques y Ornatos\n'+
 '3.Limpieza de vías\n4.Derechos de cementerio\nPor ejemplo: /formula 2 \n\n'+
-'b) Pendientes totales: ingresar el comando /pendientes más el número de cedula: \nPor ejemplo /pendientes 123456789\n\n'+
-'c)Últimos pagos realizados: ingresar el comando /pagos más el número de cedula y dos rangos de fechas en los que se desea consultar estos pagos:\nPor ejemplo '+
+'b) Pendientes totales: ingresar el comando /pendientes más el número de cédula: \nPor ejemplo /pendientes 123456789\n\n'+
+'c)Últimos pagos realizados: ingresar el comando /pagos más el número de cédula y dos rangos de fechas en los que se desea consultar estos pagos:\nPor ejemplo '+
 '/pagos 123456789 2021-03-12 2021-07-21\n\n'+
 'd)Horarios de atención: ingresar el comando /horarios para obtener los horarios de atención de la municipalidad\n\n'+
 'e)Central telefónica: ingresar el comando /contactos para obtener el directorio de contactos telefónicos de la municipalidad');
